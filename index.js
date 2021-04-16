@@ -23,6 +23,12 @@ io.on("Connection", (Socket) => {
   Socket.on("disconnect", () => {
     Socket.broadcast.emit("callended");
   });
+  Socket.on("calluser", ({ userToCall, signalData, from, name }) => {
+    io.to(userToCall).emit("calluser", { signal: signalData, from, name });
+  });
+  Socket.on("answerCall", (data) => {
+    io.to(data.to).emit("callaccepted", data.signal);
+  });
 });
 
 server.listen(PORT, () => console.log(`Server listning on port ${PORT}`));
